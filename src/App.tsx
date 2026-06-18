@@ -76,11 +76,22 @@ function Home() {
               <div className="tx-icon"><FileText size={18} /></div>
               <div className="tx-info">
                 <span className="tx-hash">Tx: <code>{tx.hash.slice(0,16)}...</code></span>
-                <span className="tx-time">{new Date(tx.timestamp).toLocaleTimeString()}</span>
+                <span className="tx-time">
+                  {new Date(tx.timestamp).toLocaleTimeString()} • <span className="network-badge">{tx.network || "Brixs Testnet"}</span>
+                </span>
+                <span className="tx-type-badge">{tx.type || "Transfer"}</span>
               </div>
               <div className="tx-addresses">
-                <div>From: <Link to={`/address/${tx.from}`}>{tx.from.slice(0,10)}...</Link></div>
-                <div>To: {tx.to ? <Link to={`/address/${tx.to}`}>{tx.to.slice(0,10)}...</Link> : <span className="badge">Contract Creation</span>}</div>
+                <div>From: <Link to={`/address/${tx.from}`}>{tx.from.slice(0,15)}...</Link></div>
+                {tx.to ? (
+                  <div>To: <Link to={`/address/${tx.to}`}>{tx.to.slice(0,15)}...</Link></div>
+                ) : (
+                  <div>
+                    Deployed: <Link to={`/address/${tx.contractAddress}`}>{tx.contractAddress?.slice(0,15)}...</Link>
+                    <span className="badge">Contract Creation</span>
+                  </div>
+                )}
+                <div className="tx-value">Value: {(Number(tx.value) / 1e18).toFixed(4)} BRIXS</div>
               </div>
             </div>
           ))}
@@ -130,11 +141,22 @@ function AddressView() {
               <div className="tx-icon"><FileText size={18} /></div>
               <div className="tx-info">
                 <span className="tx-hash">Tx: <code>{tx.hash.slice(0,16)}...</code></span>
-                <span className="tx-time">{new Date(tx.timestamp).toLocaleTimeString()}</span>
+                <span className="tx-time">
+                  {new Date(tx.timestamp).toLocaleTimeString()} • <span className="network-badge">{tx.network || "Brixs Testnet"}</span>
+                </span>
+                <span className="tx-type-badge">{tx.type || "Transfer"}</span>
               </div>
               <div className="tx-addresses">
-                <div>From: <Link to={`/address/${tx.from}`}>{tx.from === addr ? 'This Address' : tx.from.slice(0,10)}</Link></div>
-                <div>To: {tx.to ? <Link to={`/address/${tx.to}`}>{tx.to === addr ? 'This Address' : tx.to.slice(0,10)}</Link> : 'Contract Creation'}</div>
+                <div>From: <Link to={`/address/${tx.from}`}>{tx.from === addr ? 'This Address' : tx.from.slice(0,15)}</Link></div>
+                {tx.to ? (
+                  <div>To: <Link to={`/address/${tx.to}`}>{tx.to === addr ? 'This Address' : tx.to.slice(0,15)}</Link></div>
+                ) : (
+                  <div>
+                    Deployed: <Link to={`/address/${tx.contractAddress}`}>{tx.contractAddress === addr ? 'This Contract' : tx.contractAddress?.slice(0,15)}...</Link>
+                    <span className="badge">Contract Creation</span>
+                  </div>
+                )}
+                <div className="tx-value">Value: {(Number(tx.value) / 1e18).toFixed(4)} BRIXS</div>
               </div>
             </div>
           ))}
