@@ -3,7 +3,7 @@ import { BrowserRouter as Router, Routes, Route, Link, useParams, useNavigate } 
 import { Search, Activity, Box, FileText, ArrowRight, Wallet } from 'lucide-react';
 import './index.css';
 
-const RPC_URL = import.meta.env.VITE_RPC_URL || "https://brixs-core-node.onrender.com";
+const RPC_URL = import.meta.env.VITE_RPC_URL || "https://rpc-testnet.brixs.space";
 
 function Home() {
   const [stats, setStats] = useState(null);
