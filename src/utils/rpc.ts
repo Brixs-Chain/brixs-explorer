@@ -3,8 +3,8 @@ import { ethers } from 'ethers';
 // ── Config ────────────────────────────────────────────────────────────────────
 // RPC_URL: the gateway (works for JSON-RPC on both local and production)
 // EXPLORER_API: the sequencer's explorer REST endpoints (local only on :8546)
-export const RPC_URL = import.meta.env.VITE_RPC_URL || 'https://rpc-testnet.brixs.space';
-export const EXPLORER_API = import.meta.env.VITE_EXPLORER_API || 'https://rpc-testnet.brixs.space';
+export const RPC_URL = import.meta.env.VITE_RPC_URL || 'https://brixs-core-node.onrender.com';
+export const EXPLORER_API = import.meta.env.VITE_EXPLORER_API || 'https://brixs-core-node.onrender.com';
 export const CHAIN_ID = 51515;
 export const CHAIN_NAME = 'Brixs Chain Testnet';
 export const NATIVE_TOKEN = 'BRIXS';

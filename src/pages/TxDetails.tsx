@@ -25,7 +25,16 @@ const TxDetails: React.FC = () => {
       getTransactionDetails(hash).catch(() => null),
     ]).then(([explorerTx, rpcTx]) => {
       if (explorerTx && !explorerTx.error) {
-        setTx({ ...explorerTx, ...rpcTx });
+        // explorerTx has the real data (like to, from, value, type) for faucet txs
+        // rpcTx might have dummy data that overwrites it if we spread it last
+        const merged = { ...rpcTx, ...explorerTx };
+        
+        // If it's mined (has blockNumber) but missing status, assume success (1)
+        if (merged.blockNumber && merged.status === undefined) {
+          merged.status = 1;
+        }
+        
+        setTx(merged);
       } else if (rpcTx) {
         setTx(rpcTx);
       } else {
