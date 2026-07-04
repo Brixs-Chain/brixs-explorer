@@ -10,14 +10,14 @@ const SiteFooter: React.FC = () => {
     try {
       await window.ethereum.request({
         method: 'wallet_switchEthereumChain',
-        params: [{ chainId: '0x76ADF1' }],
+        params: [{ chainId: '0xC93B' }],
       });
     } catch (switchError: any) {
       if (switchError.code === 4902) {
         await window.ethereum.request({
           method: 'wallet_addEthereumChain',
           params: [{
-            chainId: '0x76ADF1',
+            chainId: '0xC93B',
             chainName: 'Brixs Chain Testnet',
             nativeCurrency: { name: 'BRIXS', symbol: 'BRIXS', decimals: 18 },
             rpcUrls: ['https://rpc-testnet.brixs.space'],

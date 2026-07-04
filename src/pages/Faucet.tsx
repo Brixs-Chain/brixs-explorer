@@ -116,7 +116,7 @@ const Faucet: React.FC = () => {
               )}
             </div>
             <div style={{ marginTop: 12, fontSize: 12, color: 'var(--text-muted)' }}>
-              Add Brixs Testnet to MetaMask: RPC URL <code style={{ background: 'var(--bg-tertiary)', padding: '1px 6px', borderRadius: 4 }}>https://rpc-testnet.brixs.space</code>, Chain ID <code style={{ background: 'var(--bg-tertiary)', padding: '1px 6px', borderRadius: 4 }}>7777777</code>
+              Add Brixs Testnet to MetaMask: RPC URL <code style={{ background: 'var(--bg-tertiary)', padding: '1px 6px', borderRadius: 4 }}>https://rpc-testnet.brixs.space</code>, Chain ID <code style={{ background: 'var(--bg-tertiary)', padding: '1px 6px', borderRadius: 4 }}>51515</code>
             </div>
           </div>
         )}
@@ -138,7 +138,7 @@ const Faucet: React.FC = () => {
         <div style={{ fontSize: 13, color: 'var(--text-secondary)', lineHeight: 1.8 }}>
           <div>• <strong>Network Name:</strong> Brixs Testnet</div>
           <div>• <strong>RPC URL:</strong> <code>https://rpc-testnet.brixs.space</code></div>
-          <div>• <strong>Chain ID:</strong> 7777777</div>
+          <div>• <strong>Chain ID:</strong> 51515</div>
           <div>• <strong>Symbol:</strong> BRIXS</div>
           <div>• <strong>Explorer:</strong> https://testnet.brixs.space/</div>
         </div>

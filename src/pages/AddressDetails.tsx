@@ -74,7 +74,7 @@ const AddressDetails: React.FC = () => {
         </div>
         <div className="detail-row">
           <div className="detail-label">Network</div>
-          <div className="detail-value">Brixs Testnet (Chain ID: 7777777)</div>
+          <div className="detail-value">Brixs Testnet (Chain ID: 51515)</div>
         </div>
       </div>
 

@@ -61,7 +61,7 @@ const BlockDetails: React.FC = () => {
         </div>
         <div className="detail-row">
           <div className="detail-label">Chain</div>
-          <div className="detail-value">Brixs Testnet (Chain ID: 7777777)</div>
+          <div className="detail-value">Brixs Testnet (Chain ID: 51515)</div>
         </div>
       </div>
 
