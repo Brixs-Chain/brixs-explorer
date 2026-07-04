@@ -42,7 +42,8 @@ const Navbar: React.FC = () => {
               chainName: 'Brixs Chain Testnet',
               nativeCurrency: { name: 'BRIXS', symbol: 'BRIXS', decimals: 18 },
               rpcUrls: ['https://rpc-testnet.brixs.space'],
-              blockExplorerUrls: ['https://scan.brixs.space'],
+              blockExplorerUrls: ['https://testnet.brixs.space'],
+              iconUrls: ['https://brixs.space/branding-kit/icon_white_on_transparent.png'],
             }]
           });
         }
