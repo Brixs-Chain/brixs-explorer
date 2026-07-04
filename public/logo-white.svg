@@ -1,7 +1,7 @@
-<svg width="780" height="320" viewBox="0 0 780 320"
+<svg width="320" height="320" viewBox="0 0 320 320"
   xmlns="http://www.w3.org/2000/svg">
 
-<g transform="translate(0, 0)">
+<g transform="translate(-40, 53)">
 
   <!-- TOP FACE -->
   <polygon points="200,52 248,79 200,106 152,79"
@@ -44,16 +44,4 @@
   <circle cx="200" cy="160" r="2"   fill="#555555"/>
 
 </g>
-
-  <!-- DIVIDER LINE -->
-  <line x1="360" y1="70" x2="360" y2="250" stroke="#444444" stroke-width="0.8"/>
-  <!-- BRIXS wordmark -->
-  <text x="390" y="185"
-    font-family="Arial, Helvetica Neue, sans-serif"
-    font-weight="300"
-    font-size="96"
-    letter-spacing="14"
-    fill="#FFFFFF">BRIXS</text>
-  <!-- CHAIN sub-caption REMOVED as requested -->
-
 </svg>
