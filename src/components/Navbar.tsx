@@ -78,9 +78,11 @@ const Navbar: React.FC = () => {
             Brixs Scan
           </Link>
 
+
           {/* Desktop nav */}
           <div className="nav-links">
             <Link to="/" className="nav-link">Home</Link>
+            <a href="https://docs.brixs.space" target="_blank" rel="noreferrer" className="nav-link">Docs ↗</a>
 
             {/* Blockchain */}
             <div className="dropdown">
@@ -171,6 +173,8 @@ const Navbar: React.FC = () => {
         <Link to="/blocks" onClick={() => setMobileOpen(false)}>Blocks</Link>
         <Link to="/pending" onClick={() => setMobileOpen(false)}>Pending Txs</Link>
         <Link to="/validators" onClick={() => setMobileOpen(false)}>Validators</Link>
+        <a href="https://docs.brixs.space" target="_blank" rel="noreferrer">Docs ↗</a>
+        <Link to="/api-keys" onClick={() => setMobileOpen(false)}>API Keys</Link>
         <a href="https://faucet.brixs.space" target="_blank" rel="noreferrer">Faucet ↗</a>
         <Link to="/tools/unit-converter" onClick={() => setMobileOpen(false)}>Unit Converter</Link>
       </div>
