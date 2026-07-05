@@ -1,0 +1,3 @@
+User-agent: *
+Allow: /
+Sitemap: https://testnet.brixs.space/sitemap.xml

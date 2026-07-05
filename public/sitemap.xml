@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
+  <!-- Core Explorer Routes -->
+  <url><loc>https://testnet.brixs.space/</loc><lastmod>2026-07-05</lastmod><changefreq>always</changefreq><priority>1.0</priority></url>
+  <url><loc>https://testnet.brixs.space/blocks</loc><lastmod>2026-07-05</lastmod><changefreq>always</changefreq><priority>0.9</priority></url>
+  <url><loc>https://testnet.brixs.space/txs</loc><lastmod>2026-07-05</lastmod><changefreq>always</changefreq><priority>0.9</priority></url>
+  <url><loc>https://testnet.brixs.space/pending</loc><lastmod>2026-07-05</lastmod><changefreq>always</changefreq><priority>0.8</priority></url>
+  <url><loc>https://testnet.brixs.space/validators</loc><lastmod>2026-07-05</lastmod><changefreq>hourly</changefreq><priority>0.8</priority></url>
+
+  <!-- Tools & Assets -->
+  <url><loc>https://testnet.brixs.space/tokens</loc><lastmod>2026-07-05</lastmod><changefreq>hourly</changefreq><priority>0.8</priority></url>
+  <url><loc>https://testnet.brixs.space/token-transfers</loc><lastmod>2026-07-05</lastmod><changefreq>always</changefreq><priority>0.8</priority></url>
+  <url><loc>https://testnet.brixs.space/tools/unit-converter</loc><lastmod>2026-07-05</lastmod><changefreq>monthly</changefreq><priority>0.7</priority></url>
+  <url><loc>https://testnet.brixs.space/tools/broadcast</loc><lastmod>2026-07-05</lastmod><changefreq>monthly</changefreq><priority>0.7</priority></url>
+  <url><loc>https://testnet.brixs.space/tools/api</loc><lastmod>2026-07-05</lastmod><changefreq>monthly</changefreq><priority>0.7</priority></url>
+</urlset>
