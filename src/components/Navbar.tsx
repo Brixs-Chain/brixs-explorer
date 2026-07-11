@@ -8,52 +8,7 @@ declare global { interface Window { ethereum?: any; } }
 const Navbar: React.FC = () => {
   const navigate = useNavigate();
   const [mobileOpen, setMobileOpen] = useState(false);
-  const [walletAddress, setWalletAddress] = useState<string | null>(null);
   const [searchQuery, setSearchQuery] = useState('');
-
-  // Auto-connect if already connected
-  useEffect(() => {
-    if (window.ethereum) {
-      window.ethereum.request({ method: 'eth_accounts' }).then((accounts: string[]) => {
-        if (accounts.length > 0) setWalletAddress(accounts[0]);
-      });
-      window.ethereum.on('accountsChanged', (accounts: string[]) => {
-        setWalletAddress(accounts.length > 0 ? accounts[0] : null);
-      });
-    }
-  }, []);
-
-  const connectWallet = async () => {
-    if (!window.ethereum) return alert('Please install MetaMask!');
-    try {
-      // Try to switch to Brixs chain first
-      try {
-        await window.ethereum.request({
-          method: 'wallet_switchEthereumChain',
-          params: [{ chainId: '0xC93B' }], // 51515
-        });
-      } catch (switchError: any) {
-        // Chain not added yet — add it
-        if (switchError.code === 4902) {
-          await window.ethereum.request({
-            method: 'wallet_addEthereumChain',
-            params: [{
-              chainId: '0xC93B',
-              chainName: 'Brixs Chain Testnet',
-              nativeCurrency: { name: 'BRIXS', symbol: 'BRIXS', decimals: 18 },
-              rpcUrls: ['https://rpc-testnet.brixs.space'],
-              blockExplorerUrls: ['https://testnet.brixs.space'],
-              iconUrls: ['https://brixs.space/branding-kit/icon_white_on_transparent.png'],
-            }]
-          });
-        }
-      }
-      const accounts = await window.ethereum.request({ method: 'eth_requestAccounts' });
-      setWalletAddress(accounts[0]);
-    } catch (err) {
-      console.error('Wallet connect error:', err);
-    }
-  };
 
   const handleSearch = (e: React.FormEvent) => {
     e.preventDefault();
@@ -142,14 +97,6 @@ const Navbar: React.FC = () => {
               <span className="network-dot" />
               Brixs Testnet
             </div>
-
-            <button
-              className={`btn-wallet ${walletAddress ? 'connected' : ''}`}
-              onClick={walletAddress ? undefined : connectWallet}
-            >
-              <Wallet size={14} />
-              {walletAddress ? short(walletAddress) : 'Connect Wallet'}
-            </button>
 
             <button className="mobile-btn" onClick={() => setMobileOpen(!mobileOpen)}>
               {mobileOpen ? <X size={22} /> : <Menu size={22} />}
