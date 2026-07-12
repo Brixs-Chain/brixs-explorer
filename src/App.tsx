@@ -16,6 +16,7 @@ import PendingTxs from './pages/PendingTxs';
 import ApiKeys from './pages/ApiKeys';
 import Tokens from './pages/Tokens';
 import TokenTransfers from './pages/TokenTransfers';
+import TokenDetails from './pages/TokenDetails';
 import InternalTxs from './pages/InternalTxs';
 import VerifiedContracts from './pages/VerifiedContracts';
 
@@ -47,6 +48,7 @@ function App() {
             <Route path="/tools/broadcast"        element={<BroadcastTx />} />
             <Route path="/tools/api"              element={<ApiKeys />} />
             <Route path="/tokens"                 element={<Tokens />} />
+            <Route path="/token/:address"         element={<TokenDetails />} />
             <Route path="/token-transfers"        element={<TokenTransfers />} />
             <Route path="/txsInternal"            element={<InternalTxs />} />
             <Route path="/contractsVerified"      element={<VerifiedContracts />} />
