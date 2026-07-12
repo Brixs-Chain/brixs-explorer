@@ -48,7 +48,7 @@ const TpsChart: React.FC = () => {
       
       // Anchor the final day to the exact real network state
       if (i === 0) {
-        currentVal = Math.max(0.01, realTotalTxs > 0 ? (realTotalTxs / (stats.totalBlocks || 1)) / 3 : currentVal);
+        currentVal = Math.max(0.01, realTotalTxs > 0 ? (realTotalTxs / (stats?.totalBlocks || 1)) / 3 : currentVal);
       }
       
       data.push({
