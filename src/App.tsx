@@ -19,6 +19,7 @@ import TokenTransfers from './pages/TokenTransfers';
 import TokenDetails from './pages/TokenDetails';
 import InternalTxs from './pages/InternalTxs';
 import VerifiedContracts from './pages/VerifiedContracts';
+import TpsChart from './pages/TpsChart';
 
 const Placeholder = ({ title }: { title: string }) => (
   <div className="container page-wrapper">
@@ -40,6 +41,7 @@ function App() {
             <Route path="/blocks"                 element={<BlocksList />} />
             <Route path="/block/:id"              element={<BlockDetails />} />
             <Route path="/txs"                    element={<TxsList />} />
+            <Route path="/charts/tps"             element={<TpsChart />} />
             <Route path="/tx/:hash"               element={<TxDetails />} />
             <Route path="/address/:hash"          element={<AddressDetails />} />
             <Route path="/pending"                element={<PendingTxs />} />

@@ -149,7 +149,7 @@ const Dashboard: React.FC = () => {
             </div>
           </div>
 
-          <div className="stat-item" style={{ gridColumn: 'span 2', display: 'flex', flexDirection: 'column', padding: '16px' }}>
+          <Link to="/charts/tps" className="stat-item" style={{ gridColumn: 'span 2', display: 'flex', flexDirection: 'column', padding: '16px', textDecoration: 'none', color: 'inherit' }}>
             <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: 12 }}>
               <div style={{ display: 'flex', alignItems: 'center', gap: 8 }}>
                 <TrendingUp size={16} style={{ color: 'var(--accent)' }} />
@@ -168,7 +168,7 @@ const Dashboard: React.FC = () => {
                 }} />
               ))}
             </div>
-          </div>
+          </Link>
         </div>
 
         {/* ── Charts (Transactions & Accounts) ───────────────────────────── */}
