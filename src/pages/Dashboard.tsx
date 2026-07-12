@@ -6,6 +6,7 @@ import {
   getExplorerStats, getExplorerBlocks, getExplorerTxs,
   formatTimeAgo, shortHash, formatBrixs, NATIVE_TOKEN
 } from '../utils/rpc';
+import CurrencyLogo from '../components/CurrencyLogo';
 import './Dashboard.css';
 
 const Dashboard: React.FC = () => {
@@ -22,7 +23,7 @@ const Dashboard: React.FC = () => {
     try {
       const [s, b, t] = await Promise.all([
         getExplorerStats(),
-        getExplorerBlocks(1, 6),
+        getExplorerBlocks(1, 15),
         getExplorerTxs(1, 6),
       ]);
       setStats(s);
@@ -53,45 +54,46 @@ const Dashboard: React.FC = () => {
   };
 
   const tpsHistory = useMemo(() => {
-    return Array.from({ length: 20 }, () => Math.floor(Math.random() * 80) + 20);
-  }, [stats?.currentBlock]);
+    if (!blocks || blocks.length < 2) {
+      return Array.from({ length: 20 }, () => 1);
+    }
+    
+    const history = [];
+    for (let i = 0; i < blocks.length - 1; i++) {
+      const newest = blocks[i];
+      const older = blocks[i + 1];
+      const newestTs = newest.timestamp > 1e12 ? newest.timestamp : newest.timestamp * 1000;
+      const olderTs = older.timestamp > 1e12 ? older.timestamp : older.timestamp * 1000;
+      
+      const timeDiffSec = Math.max(1, Math.abs(newestTs - olderTs) / 1000);
+      const tps = (newest.txCount || 0) / timeDiffSec;
+      history.unshift(Math.round(tps)); // newest goes to the end
+    }
+    
+    while (history.length < 20) {
+      history.unshift(history[0] || 1);
+    }
+    return history;
+  }, [blocks]);
 
   const currentTps = tpsHistory[tpsHistory.length - 1] || 0;
 
-  // Generate dynamic chart data based on real network state
+  // Generate dynamic chart data based on real network state (Recent Blocks)
   const chartData = useMemo(() => {
-    const data = [];
-    const now = new Date();
-    const realTotalTxs = stats?.totalTransactions || 0;
+    if (!blocks || blocks.length === 0) return [];
     
-    // Create a realistic growth curve that ends exactly at the real total transactions
-    let currentTxs = realTotalTxs > 0 ? (realTotalTxs / 15) : 2000;
-    let currentAccounts = realTotalTxs > 0 ? Math.floor(currentTxs * 0.02) + 200 : 50;
-
-    for (let i = 14; i >= 0; i--) {
-      const d = new Date(now.getTime() - i * 24 * 60 * 60 * 1000);
-      
-      const changeTxs = (Math.random() - 0.45) * 0.3; // Slight upward bias
-      const changeAccs = (Math.random() - 0.45) * 0.2;
-      
-      currentTxs = currentTxs + (currentTxs * changeTxs);
-      currentAccounts = currentAccounts + (currentAccounts * changeAccs);
-      
-      // Occasional spikes
-      if (Math.random() < 0.1) currentTxs *= (1.2 + Math.random() * 0.5);
-      if (Math.random() < 0.1) currentAccounts *= (1.2 + Math.random() * 0.3);
-
-      if (currentTxs < 10) currentTxs = 10 + Math.random() * 50;
-      if (currentAccounts < 2) currentAccounts = 2 + Math.random() * 10;
-      
-      data.push({
-        name: `${d.getDate()} ${d.toLocaleString('default', { month: 'short' })}`,
-        txs: i === 0 && realTotalTxs > 0 ? realTotalTxs : Math.floor(currentTxs),
-        accounts: i === 0 && realTotalTxs > 0 ? Math.floor(realTotalTxs * 0.02) + 200 : Math.floor(currentAccounts)
-      });
-    }
-    return data;
-  }, [stats?.totalTransactions]);
+    // We want the chart to go from older to newer (left to right)
+    const reversed = [...blocks].reverse();
+    
+    return reversed.map(b => {
+      const gas = b.gasUsed ? parseInt(b.gasUsed.toString(), b.gasUsed.toString().startsWith('0x') ? 16 : 10) : 0;
+      return {
+        name: `${b.number}`,
+        txs: b.txCount || 0,
+        gas: isNaN(gas) ? 0 : gas
+      };
+    });
+  }, [blocks]);
 
   return (
     <div>
@@ -178,8 +180,8 @@ const Dashboard: React.FC = () => {
           <div className="card" style={{ padding: 24, paddingBottom: 16 }}>
             <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start', marginBottom: 24 }}>
               <div>
-                <h3 style={{ fontSize: 16, fontWeight: 600, color: 'var(--text)', marginBottom: 4 }}>Transactions Count</h3>
-                <p style={{ fontSize: 13, color: 'var(--text-secondary)' }}>The total number of transactions per day on the Brixs network.</p>
+                <h3 style={{ fontSize: 16, fontWeight: 600, color: 'var(--text)', marginBottom: 4 }}>Transactions per Block</h3>
+                <p style={{ fontSize: 13, color: 'var(--text-secondary)' }}>The number of transactions processed in the latest blocks.</p>
               </div>
               <Link to="/txs" className="btn btn-outline" style={{ fontSize: 12, padding: '4px 12px' }}>View Details ›</Link>
             </div>
@@ -188,7 +190,7 @@ const Dashboard: React.FC = () => {
                 <LineChart data={chartData} margin={{ top: 5, right: 0, left: -20, bottom: 0 }}>
                   <CartesianGrid strokeDasharray="3 3" vertical={false} stroke="var(--border)" />
                   <XAxis dataKey="name" axisLine={false} tickLine={false} tick={{ fontSize: 11, fill: 'var(--text-muted)' }} tickMargin={10} minTickGap={20} />
-                  <YAxis axisLine={false} tickLine={false} tick={{ fontSize: 11, fill: 'var(--text-muted)' }} tickFormatter={(val) => val >= 1000 ? `${(val/1000).toFixed(1)}k` : val} />
+                  <YAxis axisLine={false} tickLine={false} tick={{ fontSize: 11, fill: 'var(--text-muted)' }} />
                   <Tooltip contentStyle={{ borderRadius: 8, border: '1px solid var(--border)', boxShadow: '0 4px 6px -1px rgba(0,0,0,0.1)' }} />
                   <Line type="monotone" dataKey="txs" stroke="#EAB308" strokeWidth={2} dot={false} activeDot={{ r: 4 }} />
                 </LineChart>
@@ -200,8 +202,8 @@ const Dashboard: React.FC = () => {
           <div className="card" style={{ padding: 24, paddingBottom: 16 }}>
             <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start', marginBottom: 24 }}>
               <div>
-                <h3 style={{ fontSize: 16, fontWeight: 600, color: 'var(--text)', marginBottom: 4 }}>Account Growth</h3>
-                <p style={{ fontSize: 13, color: 'var(--text-secondary)' }}>The number of new accounts added per day on the Brixs network.</p>
+                <h3 style={{ fontSize: 16, fontWeight: 600, color: 'var(--text)', marginBottom: 4 }}>Gas Used per Block</h3>
+                <p style={{ fontSize: 13, color: 'var(--text-secondary)' }}>The total gas consumed by transactions in the latest blocks.</p>
               </div>
               <Link to="/validators" className="btn btn-outline" style={{ fontSize: 12, padding: '4px 12px' }}>View Details ›</Link>
             </div>
@@ -210,9 +212,9 @@ const Dashboard: React.FC = () => {
                 <LineChart data={chartData} margin={{ top: 5, right: 0, left: -20, bottom: 0 }}>
                   <CartesianGrid strokeDasharray="3 3" vertical={false} stroke="var(--border)" />
                   <XAxis dataKey="name" axisLine={false} tickLine={false} tick={{ fontSize: 11, fill: 'var(--text-muted)' }} tickMargin={10} minTickGap={20} />
-                  <YAxis axisLine={false} tickLine={false} tick={{ fontSize: 11, fill: 'var(--text-muted)' }} />
+                  <YAxis axisLine={false} tickLine={false} tick={{ fontSize: 11, fill: 'var(--text-muted)' }} tickFormatter={(val) => val >= 1000 ? `${(val/1000).toFixed(1)}k` : val} />
                   <Tooltip contentStyle={{ borderRadius: 8, border: '1px solid var(--border)', boxShadow: '0 4px 6px -1px rgba(0,0,0,0.1)' }} />
-                  <Line type="monotone" dataKey="accounts" stroke="#EAB308" strokeWidth={2} dot={false} activeDot={{ r: 4 }} />
+                  <Line type="monotone" dataKey="gas" stroke="#EAB308" strokeWidth={2} dot={false} activeDot={{ r: 4 }} />
                 </LineChart>
               </ResponsiveContainer>
             </div>
@@ -252,7 +254,7 @@ const Dashboard: React.FC = () => {
                   <p>No blocks yet. Send a transaction via the faucet to start.</p>
                 </div>
               )
-              : blocks.map((b, i) => (
+              : blocks.slice(0, 6).map((b, i) => (
                 <div key={i} className="list-item">
                   <div className="item-icon"><Box size={18} /></div>
                   <div className="item-body">
@@ -311,7 +313,10 @@ const Dashboard: React.FC = () => {
                         From <Link to={`/address/${tx.from}`} style={{ color: 'var(--accent)', fontFamily: 'var(--font-mono)', fontSize: 11 }}>{shortHash(tx.from, 5)}</Link>
                         {tx.to && <> → <Link to={`/address/${tx.to}`} style={{ color: 'var(--accent)', fontFamily: 'var(--font-mono)', fontSize: 11 }}>{shortHash(tx.to, 5)}</Link></>}
                       </span>
-                      <span className="item-amount">{formatBrixs(tx.value || '0')} {NATIVE_TOKEN}</span>
+                      <span className="item-amount" style={{ display: 'inline-flex', alignItems: 'center', gap: '4px' }}>
+                        {formatBrixs(tx.value || '0')} {NATIVE_TOKEN}
+                        <CurrencyLogo symbol={NATIVE_TOKEN} size={12} />
+                      </span>
                     </div>
                   </div>
                 </div>

@@ -2,6 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { Link, useParams } from 'react-router-dom';
 import { Wallet, ArrowUpRight, ArrowDownLeft, FileText } from 'lucide-react';
 import { getExplorerAddress, getAddressInfo, formatTimeAgo, shortHash, formatBrixs, NATIVE_TOKEN } from '../utils/rpc';
+import CurrencyLogo from '../components/CurrencyLogo';
 
 const AddressDetails: React.FC = () => {
   const { hash: address } = useParams<{ hash: string }>();
@@ -60,8 +61,9 @@ const AddressDetails: React.FC = () => {
       <div className="card" style={{ padding: '0 24px', marginBottom: 24 }}>
         <div className="detail-row">
           <div className="detail-label">Balance</div>
-          <div className="detail-value">
+          <div className="detail-value" style={{ display: 'flex', alignItems: 'center', gap: '6px' }}>
             <strong style={{ fontSize: 18 }}>{formatBrixs(info?.balance || '0')}</strong> {NATIVE_TOKEN}
+            <CurrencyLogo symbol={NATIVE_TOKEN} size={18} />
           </div>
         </div>
         <div className="detail-row">
@@ -119,7 +121,12 @@ const AddressDetails: React.FC = () => {
                       }
                     </td>
                     <td>{tx.to ? <Link to={`/address/${tx.to}`} className="hash-link">{shortHash(tx.to)}</Link> : <span className="badge badge-yellow">Contract</span>}</td>
-                    <td style={{ fontWeight: 600 }}>{formatBrixs(tx.value || '0')}</td>
+                    <td style={{ fontWeight: 600 }}>
+                      <div style={{ display: 'flex', alignItems: 'center', gap: '6px' }}>
+                        {formatBrixs(tx.value || '0')}
+                        <CurrencyLogo symbol={NATIVE_TOKEN} size={16} />
+                      </div>
+                    </td>
                   </tr>
                 );
               })}

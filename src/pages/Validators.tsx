@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { ShieldCheck } from 'lucide-react';
 import { getExplorerStats, formatBrixs, NATIVE_TOKEN, EXPLORER_API } from '../utils/rpc';
+import CurrencyLogo from '../components/CurrencyLogo';
 
 const Validators: React.FC = () => {
   const [stats, setStats] = useState<any>(null);
@@ -47,7 +48,11 @@ const Validators: React.FC = () => {
                 <td style={{ fontWeight: 700, color: 'var(--accent)' }}>#{v.rank}</td>
                 <td><span className="hash-link mono">{v.address}</span></td>
                 <td style={{ fontWeight: 600 }}>{v.name}</td>
-                <td>{v.stake}</td>
+                <td>
+                  <div style={{ display: 'flex', alignItems: 'center', gap: '6px' }}>
+                    {v.stake} <CurrencyLogo symbol={NATIVE_TOKEN} size={16} />
+                  </div>
+                </td>
                 <td><span className="badge badge-success">{v.status}</span></td>
                 <td>{v.blocks}</td>
               </tr>

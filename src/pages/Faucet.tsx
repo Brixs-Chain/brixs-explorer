@@ -2,6 +2,7 @@ import React, { useState } from 'react';
 import { Link } from 'react-router-dom';
 import { Droplets, CheckCircle, XCircle, ExternalLink, Clock } from 'lucide-react';
 import { requestFaucet, NATIVE_TOKEN } from '../utils/rpc';
+import CurrencyLogo from '../components/CurrencyLogo';
 
 const Faucet: React.FC = () => {
   const [address, setAddress] = useState('');
@@ -55,7 +56,7 @@ const Faucet: React.FC = () => {
           <div>
             <div style={{ fontWeight: 600, color: 'var(--accent-dark)', marginBottom: 4 }}>Faucet Limits</div>
             <ul style={{ paddingLeft: 16, color: 'var(--text-secondary)', fontSize: 13, lineHeight: 1.8 }}>
-              <li>100 BRIXS per request</li>
+              <li style={{ display: 'flex', alignItems: 'center', gap: '4px' }}>100 BRIXS <CurrencyLogo symbol={NATIVE_TOKEN} size={12} /> per request</li>
               <li>24-hour cooldown per address</li>
               <li>Tokens are for testing only — no real value</li>
             </ul>
@@ -92,7 +93,7 @@ const Faucet: React.FC = () => {
             {status === 'loading' ? (
               <><div className="spinner" style={{ width: 16, height: 16 }} /> Requesting tokens...</>
             ) : (
-              <><Droplets size={16} /> Request 100 BRIXS</>
+              <><Droplets size={16} /> Request 100 BRIXS <CurrencyLogo symbol={NATIVE_TOKEN} size={16} /></>
             )}
           </button>
         </form>
@@ -101,10 +102,10 @@ const Faucet: React.FC = () => {
         {status === 'success' && result && (
           <div style={{ marginTop: 20, padding: '16px 20px', background: 'rgba(34,197,94,0.08)', border: '1px solid rgba(34,197,94,0.25)', borderRadius: 'var(--radius-lg)' }}>
             <div style={{ display: 'flex', alignItems: 'center', gap: 8, fontWeight: 700, color: '#16a34a', marginBottom: 12 }}>
-              <CheckCircle size={18} /> Success! 100 BRIXS sent to your wallet
+              <CheckCircle size={18} /> Success! 100 BRIXS <CurrencyLogo symbol={NATIVE_TOKEN} size={16} /> sent to your wallet
             </div>
             <div style={{ fontSize: 13, color: 'var(--text-secondary)', lineHeight: 1.8 }}>
-              <div><strong>Amount:</strong> {result.amount} {NATIVE_TOKEN}</div>
+              <div style={{ display: 'flex', alignItems: 'center', gap: '4px' }}><strong>Amount:</strong> {result.amount} {NATIVE_TOKEN} <CurrencyLogo symbol={NATIVE_TOKEN} size={12} /></div>
               {result.txHash && (
                 <div style={{ display: 'flex', alignItems: 'center', gap: 6, marginTop: 4 }}>
                   <strong>Tx Hash:</strong>

@@ -2,6 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
 import { FileText, ArrowRight } from 'lucide-react';
 import { getExplorerTxs, shortHash, formatTimeAgo, formatBrixs, NATIVE_TOKEN } from '../utils/rpc';
+import CurrencyLogo from '../components/CurrencyLogo';
 
 const InternalTxs: React.FC = () => {
   const [txs, setTxs] = useState<any[]>([]);
@@ -64,7 +65,11 @@ const InternalTxs: React.FC = () => {
                         <span className="badge badge-yellow">Contract Creation</span>
                       )}
                     </td>
-                    <td>{formatBrixs(tx.value || '0')} {NATIVE_TOKEN}</td>
+                    <td>
+                      <div style={{ display: 'flex', alignItems: 'center', gap: '4px' }}>
+                        {formatBrixs(tx.value || '0')} {NATIVE_TOKEN} <CurrencyLogo symbol={NATIVE_TOKEN} size={14} />
+                      </div>
+                    </td>
                   </tr>
                 ))}
               </tbody>

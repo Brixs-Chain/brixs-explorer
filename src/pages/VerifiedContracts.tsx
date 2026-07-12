@@ -8,22 +8,23 @@ const VerifiedContracts: React.FC = () => {
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
-    // Mocking verified contracts based on recent txs for visual representation
-    getExplorerTxs(1, 15).then(res => {
+    getExplorerTxs(1, 100).then(res => {
       const txs = res.txs || [];
-      const mockedContracts = txs.map((tx: any) => ({
-        address: tx.to || tx.from,
-        name: tx.to ? "BrixsSmartRouter" : "TokenFactory",
-        compiler: "Solidity (0.8.20)",
-        version: "v0.8.20+commit.a1b79de6",
-        balance: "0 BRIXS",
-        txs: Math.floor(Math.random() * 500) + 1,
-        date: tx.timestamp,
-        verified: true
-      }));
-      setContracts(mockedContracts);
+      const realContracts = txs
+        .filter((tx: any) => !tx.to) // Contract creations have no 'to' address
+        .map((tx: any) => ({
+          address: tx.contractAddress || tx.hash, // Use hash if address isn't returned
+          name: "Unverified Contract",
+          compiler: "—",
+          version: "—",
+          balance: "0 BRIXS",
+          txs: 1,
+          date: tx.timestamp,
+          verified: false
+        }));
+      setContracts(realContracts);
       setLoading(false);
-    });
+    }).catch(() => setLoading(false));
   }, []);
 
   return (
@@ -35,31 +36,35 @@ const VerifiedContracts: React.FC = () => {
       <div className="card">
         <div style={{ padding: '16px 20px', borderBottom: '1px solid var(--border)', display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
           <div style={{ fontSize: 13, color: 'var(--text-secondary)' }}>
-            Showing the last 15 verified contracts with Source Code
+            Showing recently deployed contracts from the last 100 transactions
           </div>
         </div>
 
         {loading ? (
           <div className="empty-state"><div className="spinner" /></div>
+        ) : contracts.length === 0 ? (
+          <div className="empty-state">
+            <p>No recently deployed contracts found in the latest blocks.</p>
+          </div>
         ) : (
           <div className="table-responsive">
             <table className="data-table">
               <thead>
                 <tr>
-                  <th>Address</th>
+                  <th>Contract/Tx Hash</th>
                   <th>Contract Name</th>
                   <th>Compiler</th>
                   <th>Version</th>
                   <th>Balance</th>
                   <th>Txns</th>
-                  <th>Verified Date</th>
+                  <th>Deployed Date</th>
                 </tr>
               </thead>
               <tbody>
                 {contracts.map((c, i) => (
                   <tr key={i}>
                     <td>
-                      <Link to={`/address/${c.address}`} className="hash-link mono" style={{ display: 'flex', alignItems: 'center', gap: 6 }}>
+                      <Link to={c.address.length === 66 ? `/tx/${c.address}` : `/address/${c.address}`} className="hash-link mono" style={{ display: 'flex', alignItems: 'center', gap: 6 }}>
                         <Code size={14} /> {shortHash(c.address, 8)}
                         {c.verified && <CheckCircle size={12} style={{ color: 'var(--success)' }} />}
                       </Link>

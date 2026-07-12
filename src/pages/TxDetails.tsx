@@ -2,6 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { Link, useParams } from 'react-router-dom';
 import { FileText, CheckCircle, XCircle, Clock, HelpCircle, ArrowRight } from 'lucide-react';
 import { getExplorerTx, getTransactionDetails, formatTimeAgo, shortHash, formatBrixs, NATIVE_TOKEN } from '../utils/rpc';
+import CurrencyLogo from '../components/CurrencyLogo';
 
 const TxDetails: React.FC = () => {
   const { hash } = useParams<{ hash: string }>();
@@ -142,7 +143,7 @@ const TxDetails: React.FC = () => {
                       <span style={{ color: 'var(--text-muted)' }}>For</span>
                       <span style={{ fontWeight: 600 }}>{transfer.value}</span>
                       <Link to={`/token/${transfer.contract}`} className="hash-link" style={{ display: 'flex', alignItems: 'center', gap: 4 }}>
-                        <div style={{ width: 14, height: 14, background: 'var(--accent)', borderRadius: '50%', display: 'flex', alignItems: 'center', justifyContent: 'center', color: '#fff', fontSize: 8 }}>T</div>
+                        <CurrencyLogo symbol={transfer.tokenSymbol} size={14} />
                         {transfer.tokenName} ({transfer.tokenSymbol})
                       </Link>
                     </div>
@@ -156,13 +157,19 @@ const TxDetails: React.FC = () => {
             <div className="detail-row">
               <div className="detail-label"><HelpCircle size={14} style={{ color: 'var(--text-muted)' }} /> Value:</div>
               <div className="detail-value">
-                <span className="badge badge-gray">{formatBrixs(tx?.value || '0')} {NATIVE_TOKEN}</span>
+                <span className="badge badge-gray" style={{ display: 'inline-flex', alignItems: 'center', gap: '4px' }}>
+                  {formatBrixs(tx?.value || '0')} {NATIVE_TOKEN}
+                  <CurrencyLogo symbol={NATIVE_TOKEN} size={14} />
+                </span>
               </div>
             </div>
 
             <div className="detail-row">
               <div className="detail-label"><HelpCircle size={14} style={{ color: 'var(--text-muted)' }} /> Transaction Fee:</div>
-              <div className="detail-value">{tx?.transactionFee || '0.000105 BRIXS'}</div>
+              <div className="detail-value" style={{ display: 'flex', alignItems: 'center', gap: '4px' }}>
+                {tx?.transactionFee || '0.000105 BRIXS'}
+                {tx?.transactionFee?.includes('BRIXS') || !tx?.transactionFee ? <CurrencyLogo symbol={NATIVE_TOKEN} size={14} /> : null}
+              </div>
             </div>
 
             <div className="detail-row">

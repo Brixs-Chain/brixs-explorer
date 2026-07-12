@@ -2,6 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { Link, useParams } from 'react-router-dom';
 import { Box, ChevronLeft, ChevronRight, HelpCircle, Clock, CheckCircle } from 'lucide-react';
 import { getExplorerBlock, formatTimeAgo, shortHash, formatBrixs, NATIVE_TOKEN } from '../utils/rpc';
+import CurrencyLogo from '../components/CurrencyLogo';
 
 const BlockDetails: React.FC = () => {
   const { id } = useParams<{ id: string }>();
@@ -84,11 +85,14 @@ const BlockDetails: React.FC = () => {
             <hr style={{ border: 'none', borderTop: '1px solid var(--border)', margin: '16px 0' }} />
             <div className="detail-row">
               <div className="detail-label"><HelpCircle size={14} style={{ color: 'var(--text-muted)' }} /> Fee Recipient:</div>
-              <div className="detail-value"><Link to={`/address/${block.feeRecipient}`} className="hash-link mono">{block.feeRecipient || '0x000...000'}</Link> in {Math.floor(Math.random() * 12 + 12)} secs</div>
+              <div className="detail-value"><Link to={`/address/${block.feeRecipient}`} className="hash-link mono">{block.feeRecipient || '0x000...000'}</Link></div>
             </div>
             <div className="detail-row">
               <div className="detail-label"><HelpCircle size={14} style={{ color: 'var(--text-muted)' }} /> Block Reward:</div>
-              <div className="detail-value">{block.blockReward || '0 BRIXS'}</div>
+              <div className="detail-value" style={{ display: 'flex', alignItems: 'center', gap: '4px' }}>
+                {block.blockReward || '0 BRIXS'}
+                {block.blockReward?.includes('BRIXS') || !block.blockReward ? <CurrencyLogo symbol={NATIVE_TOKEN} size={14} /> : null}
+              </div>
             </div>
             <div className="detail-row">
               <div className="detail-label"><HelpCircle size={14} style={{ color: 'var(--text-muted)' }} /> Total Difficulty:</div>
@@ -113,7 +117,10 @@ const BlockDetails: React.FC = () => {
             </div>
             <div className="detail-row">
               <div className="detail-label"><HelpCircle size={14} style={{ color: 'var(--text-muted)' }} /> Burnt Fees:</div>
-              <div className="detail-value">{block.burntFees || '🔥 0 BRIXS'}</div>
+              <div className="detail-value" style={{ display: 'flex', alignItems: 'center', gap: '4px' }}>
+                {block.burntFees || '🔥 0 BRIXS'}
+                {block.burntFees?.includes('BRIXS') || !block.burntFees ? <CurrencyLogo symbol={NATIVE_TOKEN} size={14} /> : null}
+              </div>
             </div>
             <div className="detail-row">
               <div className="detail-label"><HelpCircle size={14} style={{ color: 'var(--text-muted)' }} /> Extra Data:</div>
@@ -175,7 +182,10 @@ const BlockDetails: React.FC = () => {
             </div>
             <div className="detail-row">
               <div className="detail-label"><HelpCircle size={14} style={{ color: 'var(--text-muted)' }} /> Blob Gas Price:</div>
-              <div className="detail-value">{block.blobInfo?.blobGasPrice || '0 ETH'}</div>
+              <div className="detail-value" style={{ display: 'flex', alignItems: 'center', gap: '4px' }}>
+                {block.blobInfo?.blobGasPrice || '0 ETH'}
+                <CurrencyLogo symbol="ETH" size={14} />
+              </div>
             </div>
             <div className="detail-row">
               <div className="detail-label"><HelpCircle size={14} style={{ color: 'var(--text-muted)' }} /> Blob Gas Used:</div>

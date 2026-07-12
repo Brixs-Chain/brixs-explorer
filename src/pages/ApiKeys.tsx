@@ -75,9 +75,13 @@ const ApiKeys: React.FC = () => {
   };
 
   const generate = () => {
+    const array = new Uint8Array(16);
+    crypto.getRandomValues(array);
+    const secureKey = 'brx_live_' + Array.from(array, byte => byte.toString(16).padStart(2, '0')).join('');
+    
     const newKey = { 
       name: `Project ${keys.length + 1}`, 
-      key: `brx_live_${Math.random().toString(36).substring(2, 15)}${Math.random().toString(36).substring(2, 15)}`, 
+      key: secureKey, 
       created: new Date().toISOString().split('T')[0] 
     };
     setKeys([...keys, newKey]);
