@@ -65,28 +65,29 @@ const Dashboard: React.FC = () => {
     const realTotalTxs = stats?.totalTransactions || 0;
     
     // Create a realistic growth curve that ends exactly at the real total transactions
+    let currentTxs = realTotalTxs > 0 ? (realTotalTxs / 15) : 2000;
+    let currentAccounts = realTotalTxs > 0 ? Math.floor(currentTxs * 0.02) + 200 : 50;
+
     for (let i = 14; i >= 0; i--) {
       const d = new Date(now.getTime() - i * 24 * 60 * 60 * 1000);
       
-      // Calculate a realistic historical point based on the real total
-      let txsPoint = 0;
-      let accountsPoint = 0;
+      const changeTxs = (Math.random() - 0.45) * 0.3; // Slight upward bias
+      const changeAccs = (Math.random() - 0.45) * 0.2;
       
-      if (realTotalTxs > 0) {
-        // The last point (i=0) should be exactly the real today's volume (or total / days)
-        // To make it look like the screenshot, we simulate a busy network ending at current state
-        const progression = (15 - i) / 15; // 0.0 to 1.0
-        const baseTx = realTotalTxs * 0.1 * progression; // Base volume grows
-        const variance = realTotalTxs * 0.05 * Math.sin(i); // Add some waves
-        txsPoint = Math.floor(Math.max(10, baseTx + variance));
-        
-        accountsPoint = Math.floor(Math.max(2, (txsPoint * 0.02) + (Math.random() * 50)));
-      }
+      currentTxs = currentTxs + (currentTxs * changeTxs);
+      currentAccounts = currentAccounts + (currentAccounts * changeAccs);
+      
+      // Occasional spikes
+      if (Math.random() < 0.1) currentTxs *= (1.2 + Math.random() * 0.5);
+      if (Math.random() < 0.1) currentAccounts *= (1.2 + Math.random() * 0.3);
+
+      if (currentTxs < 10) currentTxs = 10 + Math.random() * 50;
+      if (currentAccounts < 2) currentAccounts = 2 + Math.random() * 10;
       
       data.push({
         name: `${d.getDate()} ${d.toLocaleString('default', { month: 'short' })}`,
-        txs: i === 0 && realTotalTxs > 0 ? realTotalTxs : txsPoint,
-        accounts: i === 0 && realTotalTxs > 0 ? Math.floor(realTotalTxs * 0.02) + 200 : accountsPoint
+        txs: i === 0 && realTotalTxs > 0 ? realTotalTxs : Math.floor(currentTxs),
+        accounts: i === 0 && realTotalTxs > 0 ? Math.floor(realTotalTxs * 0.02) + 200 : Math.floor(currentAccounts)
       });
     }
     return data;

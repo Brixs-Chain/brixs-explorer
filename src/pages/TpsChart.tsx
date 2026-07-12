@@ -12,7 +12,7 @@ const TpsChart: React.FC = () => {
     getExplorerStats().then(setStats);
   }, []);
 
-  // Generate a realistic 1-year historical dataset for TPS
+  // Generate a highly realistic historical dataset using a random walk
   const chartData = useMemo(() => {
     const data = [];
     const now = new Date();
@@ -25,20 +25,35 @@ const TpsChart: React.FC = () => {
     if (range === '3m') daysToGenerate = 90;
     if (range === '6m') daysToGenerate = 180;
     
+    // Use a random walk (Brownian motion) to simulate real crypto volatility
+    let currentVal = baseTps * (0.5 + Math.random());
+    
     for (let i = daysToGenerate; i >= 0; i--) {
       const d = new Date(now.getTime() - i * 24 * 60 * 60 * 1000);
       
-      // Simulate historical wave patterns
-      const wave1 = Math.sin(i / 10) * baseTps * 0.5;
-      const wave2 = Math.cos(i / 3) * baseTps * 0.2;
-      const spike = (i % 45 === 0) ? baseTps * 3 : 0; // Occasional spikes
+      // Random walk step
+      const changePercent = (Math.random() - 0.5) * 0.4; // +/- 20% change max per day
+      currentVal = currentVal + (currentVal * changePercent);
       
-      let tpsVal = baseTps + wave1 + wave2 + spike + (Math.random() * baseTps * 0.2);
-      if (tpsVal < 0) tpsVal = 0.01;
+      // Add occasional extreme market events (spikes/crashes) but purely random, not repeating
+      if (Math.random() < 0.03) { // 3% chance of a major spike
+        currentVal *= (1.5 + Math.random()); 
+      }
+      if (Math.random() < 0.02) { // 2% chance of a major drop
+        currentVal *= (0.5 + Math.random() * 0.3);
+      }
+      
+      // Floor it so it doesn't go negative or too close to zero
+      if (currentVal < baseTps * 0.1) currentVal = baseTps * 0.1 + Math.random() * baseTps * 0.2;
+      
+      // Anchor the final day to the exact real network state
+      if (i === 0) {
+        currentVal = Math.max(0.01, realTotalTxs > 0 ? (realTotalTxs / (stats.totalBlocks || 1)) / 3 : currentVal);
+      }
       
       data.push({
         name: `${d.getDate()} ${d.toLocaleString('default', { month: 'short' })}`,
-        tps: parseFloat(tpsVal.toFixed(3))
+        tps: parseFloat(currentVal.toFixed(3))
       });
     }
     return data;
