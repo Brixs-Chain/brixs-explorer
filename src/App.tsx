@@ -16,6 +16,8 @@ import PendingTxs from './pages/PendingTxs';
 import ApiKeys from './pages/ApiKeys';
 import Tokens from './pages/Tokens';
 import TokenTransfers from './pages/TokenTransfers';
+import InternalTxs from './pages/InternalTxs';
+import VerifiedContracts from './pages/VerifiedContracts';
 
 const Placeholder = ({ title }: { title: string }) => (
   <div className="container page-wrapper">
@@ -46,6 +48,8 @@ function App() {
             <Route path="/tools/api"              element={<ApiKeys />} />
             <Route path="/tokens"                 element={<Tokens />} />
             <Route path="/token-transfers"        element={<TokenTransfers />} />
+            <Route path="/txsInternal"            element={<InternalTxs />} />
+            <Route path="/contractsVerified"      element={<VerifiedContracts />} />
             <Route path="*"                       element={<Placeholder title="404 — Page Not Found" />} />
           </Routes>
         </main>

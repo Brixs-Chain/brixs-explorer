@@ -46,12 +46,14 @@ const Navbar: React.FC = () => {
               <div className="dropdown-menu">
                 <span className="dropdown-section-label">Transactions</span>
                 <Link className="dropdown-item" to="/txs">Transactions</Link>
+                <Link className="dropdown-item" to="/txsInternal">Internal Transactions</Link>
                 <Link className="dropdown-item" to="/pending">Pending Transactions</Link>
                 <div className="dropdown-divider" />
                 <span className="dropdown-section-label">Blocks</span>
                 <Link className="dropdown-item" to="/blocks">View Blocks</Link>
                 <div className="dropdown-divider" />
                 <span className="dropdown-section-label">Accounts</span>
+                <Link className="dropdown-item" to="/contractsVerified">Verified Contracts</Link>
                 <Link className="dropdown-item" to="/validators">Validators</Link>
               </div>
             </div>
@@ -118,8 +120,10 @@ const Navbar: React.FC = () => {
         </form>
         <Link to="/" onClick={() => setMobileOpen(false)}>Home</Link>
         <Link to="/txs" onClick={() => setMobileOpen(false)}>Transactions</Link>
+        <Link to="/txsInternal" onClick={() => setMobileOpen(false)}>Internal Txs</Link>
         <Link to="/blocks" onClick={() => setMobileOpen(false)}>Blocks</Link>
         <Link to="/pending" onClick={() => setMobileOpen(false)}>Pending Txs</Link>
+        <Link to="/contractsVerified" onClick={() => setMobileOpen(false)}>Verified Contracts</Link>
         <Link to="/validators" onClick={() => setMobileOpen(false)}>Validators</Link>
         <a href="https://docs.brixs.space" target="_blank" rel="noreferrer">Docs ↗</a>
         <Link to="/api-keys" onClick={() => setMobileOpen(false)}>API Keys</Link>
