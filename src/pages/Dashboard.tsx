@@ -53,12 +53,14 @@ const Dashboard: React.FC = () => {
     else alert('Enter a valid Tx Hash, Address, or Block Number');
   };
 
-  const tpsHistory = useMemo(() => {
+  const tpsData = useMemo(() => {
     if (!blocks || blocks.length < 2) {
-      return Array.from({ length: 20 }, () => 1);
+      return { history: Array.from({ length: 20 }, () => 1), maxTheoretical: 12000 };
     }
     
     const history = [];
+    let latestMaxTps = 12000;
+
     for (let i = 0; i < blocks.length - 1; i++) {
       const newest = blocks[i];
       const older = blocks[i + 1];
@@ -66,17 +68,31 @@ const Dashboard: React.FC = () => {
       const olderTs = older.timestamp > 1e12 ? older.timestamp : older.timestamp * 1000;
       
       const timeDiffSec = Math.max(1, Math.abs(newestTs - olderTs) / 1000);
+      
+      // Method 1: Actual TPS (Count Transactions)
       const tps = (newest.txCount || 0) / timeDiffSec;
-      history.unshift(Math.round(tps)); // newest goes to the end
+      history.unshift(Math.round(tps));
+      
+      if (i === 0) {
+        // Method 2: Gas-Based Calculation (Theoretical Max TPS)
+        let gasLimit = 300000000;
+        if (newest.gasLimit) {
+           const str = newest.gasLimit.toString();
+           gasLimit = parseInt(str, str.startsWith('0x') ? 16 : 10) || 300000000;
+        }
+        latestMaxTps = Math.floor(gasLimit / (25000 * timeDiffSec));
+      }
     }
     
     while (history.length < 20) {
       history.unshift(history[0] || 1);
     }
-    return history;
+    return { history, maxTheoretical: latestMaxTps };
   }, [blocks]);
 
+  const tpsHistory = tpsData.history;
   const currentTps = tpsHistory[tpsHistory.length - 1] || 0;
+  const maxTps = tpsData.maxTheoretical || 12000;
 
   // Generate dynamic chart data based on real network state (Recent Blocks)
   const chartData = useMemo(() => {
@@ -158,7 +174,10 @@ const Dashboard: React.FC = () => {
                 <TrendingUp size={16} style={{ color: 'var(--accent)' }} />
                 <span style={{ fontSize: 13, fontWeight: 600, color: 'var(--text-secondary)' }}>Brixs Network TPS</span>
               </div>
-              <div style={{ fontSize: 18, fontWeight: 700 }}>{currentTps} <span style={{ fontSize: 12, fontWeight: 400, color: 'var(--text-muted)' }}>TPS</span></div>
+              <div style={{ textAlign: 'right' }}>
+                <div style={{ fontSize: 18, fontWeight: 700 }}>{currentTps} <span style={{ fontSize: 12, fontWeight: 400, color: 'var(--text-muted)' }}>TPS</span></div>
+                <div style={{ fontSize: 11, fontWeight: 500, color: 'var(--text-muted)', marginTop: 2 }}>Max: {maxTps.toLocaleString()} TPS</div>
+              </div>
             </div>
             <div style={{ display: 'flex', alignItems: 'flex-end', height: 40, gap: 4, width: '100%' }}>
               {tpsHistory.map((val, idx) => (
