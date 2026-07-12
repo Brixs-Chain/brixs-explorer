@@ -1,6 +1,7 @@
 import React, { useState, useEffect, useCallback, useMemo } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import { Activity, Box, Zap, Search, ArrowRight, FileText, RefreshCw, TrendingUp } from 'lucide-react';
+import { LineChart, Line, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer } from 'recharts';
 import {
   getExplorerStats, getExplorerBlocks, getExplorerTxs,
   formatTimeAgo, shortHash, formatBrixs, NATIVE_TOKEN
@@ -56,6 +57,21 @@ const Dashboard: React.FC = () => {
   }, [stats?.currentBlock]);
 
   const currentTps = tpsHistory[tpsHistory.length - 1] || 0;
+
+  // Mock data for the charts
+  const chartData = useMemo(() => {
+    const data = [];
+    const now = new Date();
+    for (let i = 14; i >= 0; i--) {
+      const d = new Date(now.getTime() - i * 24 * 60 * 60 * 1000);
+      data.push({
+        name: `${d.getDate()} ${d.toLocaleString('default', { month: 'short' })}`,
+        txs: Math.floor(Math.random() * 8000) + 2000,
+        accounts: Math.floor(Math.random() * 300) + 20
+      });
+    }
+    return data;
+  }, []);
 
   return (
     <div>
@@ -132,6 +148,53 @@ const Dashboard: React.FC = () => {
                   transition: 'height 0.3s ease'
                 }} />
               ))}
+            </div>
+          </div>
+        </div>
+
+        {/* ── Charts (Transactions & Accounts) ───────────────────────────── */}
+        <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 24, marginTop: 24 }}>
+          {/* Transactions Count Chart */}
+          <div className="card" style={{ padding: 24, paddingBottom: 16 }}>
+            <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start', marginBottom: 24 }}>
+              <div>
+                <h3 style={{ fontSize: 16, fontWeight: 600, color: 'var(--text)', marginBottom: 4 }}>Transactions Count</h3>
+                <p style={{ fontSize: 13, color: 'var(--text-secondary)' }}>The total number of transactions per day on the Brixs network.</p>
+              </div>
+              <button className="btn btn-outline" style={{ fontSize: 12, padding: '4px 12px' }}>View Details ›</button>
+            </div>
+            <div style={{ height: 200, width: '100%' }}>
+              <ResponsiveContainer width="100%" height="100%">
+                <LineChart data={chartData} margin={{ top: 5, right: 0, left: -20, bottom: 0 }}>
+                  <CartesianGrid strokeDasharray="3 3" vertical={false} stroke="var(--border)" />
+                  <XAxis dataKey="name" axisLine={false} tickLine={false} tick={{ fontSize: 11, fill: 'var(--text-muted)' }} tickMargin={10} minTickGap={20} />
+                  <YAxis axisLine={false} tickLine={false} tick={{ fontSize: 11, fill: 'var(--text-muted)' }} tickFormatter={(val) => val >= 1000 ? `${(val/1000).toFixed(1)}k` : val} />
+                  <Tooltip contentStyle={{ borderRadius: 8, border: '1px solid var(--border)', boxShadow: '0 4px 6px -1px rgba(0,0,0,0.1)' }} />
+                  <Line type="monotone" dataKey="txs" stroke="#EAB308" strokeWidth={2} dot={false} activeDot={{ r: 4 }} />
+                </LineChart>
+              </ResponsiveContainer>
+            </div>
+          </div>
+
+          {/* Account Growth Chart */}
+          <div className="card" style={{ padding: 24, paddingBottom: 16 }}>
+            <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start', marginBottom: 24 }}>
+              <div>
+                <h3 style={{ fontSize: 16, fontWeight: 600, color: 'var(--text)', marginBottom: 4 }}>Account Growth</h3>
+                <p style={{ fontSize: 13, color: 'var(--text-secondary)' }}>The number of new accounts added per day on the Brixs network.</p>
+              </div>
+              <button className="btn btn-outline" style={{ fontSize: 12, padding: '4px 12px' }}>View Details ›</button>
+            </div>
+            <div style={{ height: 200, width: '100%' }}>
+              <ResponsiveContainer width="100%" height="100%">
+                <LineChart data={chartData} margin={{ top: 5, right: 0, left: -20, bottom: 0 }}>
+                  <CartesianGrid strokeDasharray="3 3" vertical={false} stroke="var(--border)" />
+                  <XAxis dataKey="name" axisLine={false} tickLine={false} tick={{ fontSize: 11, fill: 'var(--text-muted)' }} tickMargin={10} minTickGap={20} />
+                  <YAxis axisLine={false} tickLine={false} tick={{ fontSize: 11, fill: 'var(--text-muted)' }} />
+                  <Tooltip contentStyle={{ borderRadius: 8, border: '1px solid var(--border)', boxShadow: '0 4px 6px -1px rgba(0,0,0,0.1)' }} />
+                  <Line type="monotone" dataKey="accounts" stroke="#EAB308" strokeWidth={2} dot={false} activeDot={{ r: 4 }} />
+                </LineChart>
+              </ResponsiveContainer>
             </div>
           </div>
         </div>
