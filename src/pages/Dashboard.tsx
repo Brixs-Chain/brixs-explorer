@@ -54,26 +54,41 @@ const Dashboard: React.FC = () => {
     else alert('Enter a valid Tx Hash, Address, or Block Number');
   };
 
-  // Generate mock TPS data to look exactly like the screenshot
+  // Calculate real TPS data from recent blocks
   const tpsData = useMemo(() => {
-    const data = [];
-    const now = new Date();
-    for (let i = 365; i >= 0; i--) {
-      const date = new Date(now);
-      date.setDate(date.getDate() - i);
-      let tps = Math.random() * 0.1;
-      // create some spikes to match the picture
-      if (i > 250 && i < 280) tps = Math.random() * 0.7; // big spike
-      if (i > 100 && i < 150) tps = Math.random() * 0.3; // medium spike
-      if (i < 30) tps = Math.random() * 0.15; // recent activity
-      
-      data.push({
-        name: date.toLocaleDateString('en-US', { day: 'numeric', month: 'short' }),
+    if (!blocks || blocks.length === 0) return [];
+    
+    // Sort blocks by timestamp ascending for the graph
+    const sortedBlocks = [...blocks].sort((a, b) => a.timestamp - b.timestamp);
+    
+    return sortedBlocks.map(b => {
+      // Very basic TPS calculation: tx count / 3 seconds (block time)
+      const tps = (b.txCount || 0) / 3;
+      return {
+        name: new Date(b.timestamp > 1e12 ? b.timestamp : b.timestamp * 1000).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit', second: '2-digit' }),
         tps: parseFloat(tps.toFixed(2))
-      });
-    }
-    return data;
-  }, []);
+      };
+    });
+  }, [blocks]);
+
+  // Calculate real current TPS
+  const currentTps = blocks.length > 0 ? (blocks[0].txCount || 0) / 3 : 0;
+  
+  // Estimate accounts based on unique addresses in recent txs (rough real metric)
+  const uniqueAccounts = useMemo(() => {
+    const addrs = new Set();
+    txs.forEach(tx => {
+      if (tx.from) addrs.add(tx.from);
+      if (tx.to) addrs.add(tx.to);
+    });
+    return addrs.size;
+  }, [txs]);
+
+  // Estimate total gas used in recent blocks
+  const gasUsedPerSec = useMemo(() => {
+    if (blocks.length === 0) return 0;
+    return parseInt(blocks[0].gasUsed || '0') / 3;
+  }, [blocks]);
 
   return (
     <div style={{ backgroundColor: '#f3f4f6', minHeight: '100vh', paddingBottom: 48 }}>
@@ -115,32 +130,32 @@ const Dashboard: React.FC = () => {
           
           <div className="stat-col">
             <div className="stat-label">Current Block Height</div>
-            <div className="stat-value">{stats?.currentBlock ? parseInt(stats.currentBlock).toLocaleString() : '11,255,294'}</div>
+            <div className="stat-value">{stats?.currentBlock ? parseInt(stats.currentBlock).toLocaleString() : '0'}</div>
           </div>
           
           <div className="stat-col">
             <div className="stat-label">Accounts</div>
-            <div className="stat-value">191,617</div>
+            <div className="stat-value">{uniqueAccounts.toLocaleString()}</div>
           </div>
           
           <div className="stat-col">
             <div className="stat-label">Transactions</div>
-            <div className="stat-value">{(stats?.totalTransactions ? stats.totalTransactions * 4521 : 2112484).toLocaleString()}</div>
+            <div className="stat-value">{stats?.totalTransactions ? stats.totalTransactions.toLocaleString() : '0'}</div>
           </div>
           
           <div className="stat-col">
             <div className="stat-label">Transaction TPS</div>
-            <div className="stat-value">0</div>
+            <div className="stat-value">{currentTps.toFixed(2)}</div>
           </div>
           
           <div className="stat-col">
             <div className="stat-label">Gas Used Per Second</div>
-            <div className="stat-value">13,553</div>
+            <div className="stat-value">{Math.floor(gasUsedPerSec).toLocaleString()}</div>
           </div>
           
           <div className="stat-col">
             <div className="stat-label">Block Time</div>
-            <div className="stat-value">3.000s</div>
+            <div className="stat-value">3.00s</div>
           </div>
 
         </div>
