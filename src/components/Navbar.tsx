@@ -126,7 +126,7 @@ const Navbar: React.FC = () => {
         <Link to="/contractsVerified" onClick={() => setMobileOpen(false)}>Verified Contracts</Link>
         <Link to="/validators" onClick={() => setMobileOpen(false)}>Validators</Link>
         <a href="https://docs.brixs.space" target="_blank" rel="noreferrer">Docs ↗</a>
-        <Link to="/api-keys" onClick={() => setMobileOpen(false)}>API Keys</Link>
+        <Link to="/tools/api" onClick={() => setMobileOpen(false)}>API Keys</Link>
         <a href="https://faucet.brixs.space" target="_blank" rel="noreferrer">Faucet ↗</a>
         <Link to="/tools/unit-converter" onClick={() => setMobileOpen(false)}>Unit Converter</Link>
       </div>

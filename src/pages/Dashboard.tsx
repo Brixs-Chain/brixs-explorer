@@ -161,7 +161,7 @@ const Dashboard: React.FC = () => {
                 <h3 style={{ fontSize: 16, fontWeight: 600, color: 'var(--text)', marginBottom: 4 }}>Transactions Count</h3>
                 <p style={{ fontSize: 13, color: 'var(--text-secondary)' }}>The total number of transactions per day on the Brixs network.</p>
               </div>
-              <button className="btn btn-outline" style={{ fontSize: 12, padding: '4px 12px' }}>View Details ›</button>
+              <Link to="/txs" className="btn btn-outline" style={{ fontSize: 12, padding: '4px 12px' }}>View Details ›</Link>
             </div>
             <div style={{ height: 200, width: '100%' }}>
               <ResponsiveContainer width="100%" height="100%">
@@ -183,7 +183,7 @@ const Dashboard: React.FC = () => {
                 <h3 style={{ fontSize: 16, fontWeight: 600, color: 'var(--text)', marginBottom: 4 }}>Account Growth</h3>
                 <p style={{ fontSize: 13, color: 'var(--text-secondary)' }}>The number of new accounts added per day on the Brixs network.</p>
               </div>
-              <button className="btn btn-outline" style={{ fontSize: 12, padding: '4px 12px' }}>View Details ›</button>
+              <Link to="/validators" className="btn btn-outline" style={{ fontSize: 12, padding: '4px 12px' }}>View Details ›</Link>
             </div>
             <div style={{ height: 200, width: '100%' }}>
               <ResponsiveContainer width="100%" height="100%">
