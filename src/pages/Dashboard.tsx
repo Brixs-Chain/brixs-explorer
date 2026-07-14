@@ -209,7 +209,7 @@ const Dashboard: React.FC = () => {
                 <LineChart data={chartData} margin={{ top: 5, right: 0, left: -20, bottom: 0 }}>
                   <CartesianGrid strokeDasharray="3 3" vertical={false} stroke="var(--border)" />
                   <XAxis dataKey="name" axisLine={false} tickLine={false} tick={{ fontSize: 11, fill: 'var(--text-muted)' }} tickMargin={10} minTickGap={20} />
-                  <YAxis axisLine={false} tickLine={false} tick={{ fontSize: 11, fill: 'var(--text-muted)' }} />
+                  <YAxis width={60} axisLine={false} tickLine={false} tick={{ fontSize: 11, fill: 'var(--text-muted)' }} />
                   <Tooltip contentStyle={{ borderRadius: 8, border: '1px solid var(--border)', boxShadow: '0 4px 6px -1px rgba(0,0,0,0.1)' }} />
                   <Line type="monotone" dataKey="txs" stroke="#EAB308" strokeWidth={2} dot={false} activeDot={{ r: 4 }} />
                 </LineChart>
@@ -224,14 +224,14 @@ const Dashboard: React.FC = () => {
                 <h3 style={{ fontSize: 16, fontWeight: 600, color: 'var(--text)', marginBottom: 4 }}>Gas Used per Block</h3>
                 <p style={{ fontSize: 13, color: 'var(--text-secondary)' }}>The total gas consumed by transactions in the latest blocks.</p>
               </div>
-              <Link to="/validators" className="btn btn-outline" style={{ fontSize: 12, padding: '4px 12px' }}>View Details ›</Link>
+              <Link to="/charts/gas" className="btn btn-outline" style={{ fontSize: 12, padding: '4px 12px' }}>View Details ›</Link>
             </div>
             <div style={{ height: 200, width: '100%' }}>
               <ResponsiveContainer width="100%" height="100%">
                 <LineChart data={chartData} margin={{ top: 5, right: 0, left: -20, bottom: 0 }}>
                   <CartesianGrid strokeDasharray="3 3" vertical={false} stroke="var(--border)" />
                   <XAxis dataKey="name" axisLine={false} tickLine={false} tick={{ fontSize: 11, fill: 'var(--text-muted)' }} tickMargin={10} minTickGap={20} />
-                  <YAxis axisLine={false} tickLine={false} tick={{ fontSize: 11, fill: 'var(--text-muted)' }} tickFormatter={(val) => val >= 1000 ? `${(val/1000).toFixed(1)}k` : val} />
+                  <YAxis width={60} axisLine={false} tickLine={false} tick={{ fontSize: 11, fill: 'var(--text-muted)' }} tickFormatter={(val) => val >= 1000 ? `${(val/1000).toFixed(1)}k` : val} />
                   <Tooltip contentStyle={{ borderRadius: 8, border: '1px solid var(--border)', boxShadow: '0 4px 6px -1px rgba(0,0,0,0.1)' }} />
                   <Line type="monotone" dataKey="gas" stroke="#EAB308" strokeWidth={2} dot={false} activeDot={{ r: 4 }} />
                 </LineChart>
