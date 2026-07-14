@@ -1,6 +1,39 @@
 {
   "rewrites": [
     {
+      "source": "/tx/(.*)",
+      "has": [
+        {
+          "type": "header",
+          "key": "user-agent",
+          "value": "(?i).*(bot|facebook|twitter|linkedin|discord|telegram|whatsapp|slack).*"
+        }
+      ],
+      "destination": "/api/og-html?path=/tx/$1"
+    },
+    {
+      "source": "/block/(.*)",
+      "has": [
+        {
+          "type": "header",
+          "key": "user-agent",
+          "value": "(?i).*(bot|facebook|twitter|linkedin|discord|telegram|whatsapp|slack).*"
+        }
+      ],
+      "destination": "/api/og-html?path=/block/$1"
+    },
+    {
+      "source": "/address/(.*)",
+      "has": [
+        {
+          "type": "header",
+          "key": "user-agent",
+          "value": "(?i).*(bot|facebook|twitter|linkedin|discord|telegram|whatsapp|slack).*"
+        }
+      ],
+      "destination": "/api/og-html?path=/address/$1"
+    },
+    {
       "source": "/(.*)",
       "destination": "/index.html"
     }
