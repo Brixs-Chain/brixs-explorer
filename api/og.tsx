@@ -21,8 +21,9 @@ export default function handler(req: Request) {
             justifyContent: 'center',
             flexDirection: 'column',
             backgroundColor: '#ffffff',
-            backgroundImage: 'radial-gradient(circle at 25px 25px, lightgray 2%, transparent 0%), radial-gradient(circle at 75px 75px, lightgray 2%, transparent 0%)',
-            backgroundSize: '100px 100px',
+            backgroundImage: 'url(https://testnet.brixs.space/scan-bg.png)',
+            backgroundSize: 'cover',
+            backgroundPosition: 'center',
             fontFamily: 'sans-serif',
           }}
         >
