@@ -124,7 +124,7 @@ export default function handler(req: Request) {
                     letterSpacing: '-0.01em',
                   }}
                 >
-                  scan.brixs.space
+                  testnet.brixs.space
                 </div>
               </div>
             </div>
