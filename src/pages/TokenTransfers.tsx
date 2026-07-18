@@ -2,6 +2,7 @@ import React, { useState } from 'react';
 import { Link } from 'react-router-dom';
 import { ArrowLeftRight, ChevronLeft, ChevronRight } from 'lucide-react';
 import { shortHash, formatTimeAgo } from '../utils/rpc';
+import CurrencyLogo from '../components/CurrencyLogo';
 
 const TokenTransfers: React.FC = () => {
   const [page, setPage] = useState(1);
@@ -43,7 +44,12 @@ const TokenTransfers: React.FC = () => {
                 <td><Link to={`/address/${t.from}`} className="hash-link">{shortHash(t.from)}</Link></td>
                 <td><Link to={`/address/${t.to}`} className="hash-link">{shortHash(t.to)}</Link></td>
                 <td style={{ fontWeight: 600 }}>{t.amount}</td>
-                <td><span className="badge badge-gray">{t.token}</span></td>
+                <td>
+                  <span className="badge badge-gray" style={{ display: 'inline-flex', alignItems: 'center', gap: 4 }}>
+                    <CurrencyLogo symbol={t.token} size={12} />
+                    {t.token}
+                  </span>
+                </td>
               </tr>
             ))}
           </tbody>

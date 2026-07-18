@@ -2,17 +2,16 @@ import React, { useState, useEffect } from 'react';
 import { Link, useParams } from 'react-router-dom';
 import { Box, FileText, CheckCircle, ArrowRight, Copy } from 'lucide-react';
 import { getExplorerTxs, shortHash, formatTimeAgo } from '../utils/rpc';
+import CurrencyLogo from '../components/CurrencyLogo';
 
 const TokenDetails: React.FC = () => {
   const { address } = useParams<{ address: string }>();
   const [transfers, setTransfers] = useState<any[]>([]);
   const [loading, setLoading] = useState(true);
   const [copied, setCopied] = useState(false);
+  const [tokenInfo, setTokenInfo] = useState({ name: 'Unknown Token', symbol: 'UNKNOWN' });
 
   // Derive mock token data based on the USDC dummy transfers from sequencer
-  const isUSDCToken = true; 
-  const tokenName = isUSDCToken ? "USD Circle" : "Brixs Custom Token";
-  const tokenSymbol = isUSDCToken ? "USDC" : "BXT";
   const totalSupply = "1,000,000,000.000000";
   const holders = "1,240";
   const transfersCount = "12,504";
@@ -22,20 +21,38 @@ const TokenDetails: React.FC = () => {
     getExplorerTxs(1, 100).then(res => {
       const allTxs = res.txs || [];
       const extractedTransfers: any[] = [];
+      let foundName = 'Unknown Token';
+      let foundSymbol = 'UNKNOWN';
       
       allTxs.forEach((tx: any) => {
         if (tx.erc20Transfers && tx.erc20Transfers.length > 0) {
           tx.erc20Transfers.forEach((t: any) => {
-            extractedTransfers.push({
-              ...t,
-              txHash: tx.hash,
-              timestamp: tx.timestamp,
-              blockNumber: tx.blockNumber
-            });
+            if (address && t.contract && t.contract.toLowerCase() === address.toLowerCase()) {
+              if (foundName === 'Unknown Token') {
+                foundName = t.tokenName || 'Unknown Token';
+                foundSymbol = t.tokenSymbol || 'UNKNOWN';
+              }
+              extractedTransfers.push({
+                ...t,
+                txHash: tx.hash,
+                timestamp: tx.timestamp,
+                blockNumber: tx.blockNumber
+              });
+            }
           });
         }
       });
       
+      // Fallback for mock data mappings if no transfers found
+      if (foundName === 'Unknown Token' && address) {
+        if (address.toLowerCase() === '0x0000000000000000000000000000000000000002' || address.toLowerCase().includes('usdt')) { foundName = 'Tether USD'; foundSymbol = 'USDT'; }
+        else if (address.toLowerCase() === '0x0000000000000000000000000000000000000003' || address.toLowerCase().includes('usdc')) { foundName = 'USD Coin'; foundSymbol = 'USDC'; }
+        else if (address.toLowerCase() === '0x0000000000000000000000000000000000000001' || address.toLowerCase().includes('wbrixs')) { foundName = 'Wrapped BRIXS'; foundSymbol = 'WBRIXS'; }
+        else if (address.toLowerCase() === '0x0000000000000000000000000000000000000004' || address.toLowerCase().includes('bdao')) { foundName = 'Brixs DAO'; foundSymbol = 'BDAO'; }
+        else if (address.toLowerCase() === '0x0000000000000000000000000000000000000005' || address.toLowerCase().includes('link')) { foundName = 'Chainlink'; foundSymbol = 'LINK'; }
+      }
+
+      setTokenInfo({ name: foundName, symbol: foundSymbol });
       setTransfers(extractedTransfers.slice(0, 20));
       setLoading(false);
     });
@@ -54,10 +71,8 @@ const TokenDetails: React.FC = () => {
       <div className="page-header" style={{ borderBottom: 'none', paddingBottom: 0, marginBottom: 16 }}>
         <div>
           <h1 className="page-title" style={{ display: 'flex', alignItems: 'center', gap: 8 }}>
-            <div style={{ width: 28, height: 28, background: 'var(--accent)', borderRadius: '50%', display: 'flex', alignItems: 'center', justifyContent: 'center', color: '#fff', fontSize: 16 }}>
-              T
-            </div>
-            Token <span style={{ color: 'var(--text-muted)' }}>{tokenName}</span>
+            <CurrencyLogo symbol={tokenInfo.symbol} size={28} />
+            Token <span style={{ color: 'var(--text-muted)' }}>{tokenInfo.name}</span>
           </h1>
         </div>
       </div>
@@ -69,7 +84,7 @@ const TokenDetails: React.FC = () => {
           
           <div className="detail-row">
             <div className="detail-label">Max Total Supply:</div>
-            <div className="detail-value">{totalSupply} {tokenSymbol}</div>
+            <div className="detail-value">{totalSupply} {tokenInfo.symbol}</div>
           </div>
           <div className="detail-row">
             <div className="detail-label">Holders:</div>
@@ -137,7 +152,7 @@ const TokenDetails: React.FC = () => {
                     <td><Link to={`/address/${t.from}`} className="hash-link mono">{shortHash(t.from, 8)}</Link></td>
                     <td><ArrowRight size={14} style={{ color: 'var(--success)' }} /></td>
                     <td><Link to={`/address/${t.to}`} className="hash-link mono">{shortHash(t.to, 8)}</Link></td>
-                    <td>{t.value} {tokenSymbol}</td>
+                    <td>{t.value} {tokenInfo.symbol}</td>
                   </tr>
                 )) : (
                   <tr>

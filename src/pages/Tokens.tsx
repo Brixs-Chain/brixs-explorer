@@ -39,7 +39,7 @@ const Tokens: React.FC = () => {
               <tr key={i}>
                 <td style={{ fontWeight: 600 }}>{t.name}</td>
                 <td><span className="badge badge-gray">{t.symbol}</span></td>
-                <td><Link to={`/address/${t.address}`} className="hash-link">{t.address}</Link></td>
+                <td><Link to={`/token/${t.address}`} className="hash-link">{t.address}</Link></td>
                 <td>{t.supply}</td>
               </tr>
             ))}
