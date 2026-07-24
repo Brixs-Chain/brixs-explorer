@@ -12,8 +12,7 @@ const TxsList: React.FC = () => {
   const [loading, setLoading] = useState(true);
   const LIMIT = 25;
 
-  useEffect(() => {
-    setLoading(true);
+  const fetchData = React.useCallback(() => {
     getExplorerTxs(page, LIMIT).then(data => {
       setTxs(data.txs || []);
       setTotal(data.total || 0);
@@ -21,6 +20,15 @@ const TxsList: React.FC = () => {
       setLoading(false);
     }).catch(() => setLoading(false));
   }, [page]);
+
+  useEffect(() => {
+    setLoading(true);
+    fetchData();
+    if (page === 1) {
+      const id = setInterval(fetchData, 6000);
+      return () => clearInterval(id);
+    }
+  }, [fetchData, page]);
 
   return (
     <div className="container page-wrapper">

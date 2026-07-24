@@ -18,9 +18,8 @@ const AddressDetails: React.FC = () => {
     setTimeout(() => setCopied(false), 2000);
   };
 
-  useEffect(() => {
+  const fetchData = React.useCallback(() => {
     if (!address) return;
-    setLoading(true);
     Promise.all([
       getExplorerAddress(address).catch(() => null),
       getAddressInfo(address).catch(() => null),
@@ -39,6 +38,14 @@ const AddressDetails: React.FC = () => {
       setLoading(false);
     });
   }, [address]);
+
+  useEffect(() => {
+    if (!address) return;
+    setLoading(true);
+    fetchData();
+    const id = setInterval(fetchData, 6000);
+    return () => clearInterval(id);
+  }, [fetchData, address]);
 
   if (loading) return <div className="container page-wrapper"><div className="empty-state"><div className="spinner" /><p>Loading address...</p></div></div>;
   if (error) return <div className="container page-wrapper"><div className="empty-state"><Wallet size={40} /><p>{error}</p></div></div>;
